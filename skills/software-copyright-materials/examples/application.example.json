@@ -1,0 +1,13 @@
+{
+  "name": "示例数据管理分析系统",
+  "version": "V1.0.0",
+  "owner": null,
+  "completion_date": null,
+  "publication_date": null,
+  "environment": {
+    "os": "通用操作系统（如 Windows 11 / Linux Ubuntu 22.04 LTS，示例虚拟参考）",
+    "runtime": "Python 3.10+（示例虚拟参考）",
+    "hardware": "通用 x86_64 处理器 8GB 内存 100GB 硬盘空间（示例虚拟参考）"
+  },
+  "description": "本示例文件仅用于演示软件著作权申报材料准备所需的基本元数据结构。所有涉及著作权主体、真实姓名、开发完成日期、首次发表日期及运行硬件环境等字段均为虚构参考示例；若未获申报人充分授权与事实核验，法定事实字段一律置为 null 或标记为待确认。"
+}

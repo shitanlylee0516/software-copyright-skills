@@ -1,0 +1,27 @@
+[
+  {
+    "id": "图1",
+    "caption": "系统主登录与身份验证界面",
+    "aspect": "landscape"
+  },
+  {
+    "id": "图2",
+    "caption": "主控制面板与数据概览看板",
+    "aspect": "landscape"
+  },
+  {
+    "id": "图3",
+    "caption": "参数配置与规则设置对话框",
+    "aspect": "portrait"
+  },
+  {
+    "id": "图4",
+    "caption": "数据导入与校验任务向导",
+    "aspect": "landscape"
+  },
+  {
+    "id": "图5",
+    "caption": "结果分析图表展示与导出界面",
+    "aspect": "landscape"
+  }
+]

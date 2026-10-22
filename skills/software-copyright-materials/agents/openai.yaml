@@ -1,0 +1,4 @@
+interface:
+  display_name: "软件著作权申报材料准备"
+  short_description: "协助整理中国软件著作权申报材料草稿与排版，不提供官方登记或法律保证"
+  default_prompt: "请使用 $software-copyright-materials 协助整理软件著作权申报材料草稿。"
