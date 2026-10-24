@@ -540,44 +540,123 @@ def main() -> None:
     section.footer_distance = Cm(1.5)
     section.different_first_page_header_footer = True
 
-    # Header: 左上角名称与版本号，右上角页码与总页码 (PAGE/NUMPAGES)，下方添加细横线
+    # Header: 采用 1 行 2 列无框表格布局（总宽 17.0cm = 9638 dxa），确保在各类 Word/WPS 版本中页码均绝对右对齐
+    # 左列 6236 dxa 左对齐：软件全称 版本号；右列 3402 dxa 严格右对齐：第 PAGE 页 共 NUMPAGES 页
+    # 底部设置 0.75pt (sz="6") 单细横线 (#999999)
     header = section.header
-    header_p = header.paragraphs[0]
-    header_p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    for p in list(header.paragraphs):
+        p._element.getparent().remove(p._element)
 
-    # 设置右对齐制表位：版芯宽 17.0 cm = 9638 dxa
-    pPr_head = header_p._element.get_or_add_pPr()
-    tabs_xml = parse_xml(r'''
-        <w:tabs xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-            <w:tab w:val="right" w:pos="9638"/>
-        </w:tabs>
+    title_text = f"{software_name} {software_version}".strip()
+    header_tbl_xml = parse_xml(f'''
+        <w:tbl xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+            <w:tblPr>
+                <w:tblW w:type="dxa" w:w="9638"/>
+                <w:tblCellMar>
+                    <w:top w:w="0" w:type="dxa"/>
+                    <w:bottom w:w="40" w:type="dxa"/>
+                    <w:left w:w="0" w:type="dxa"/>
+                    <w:right w:w="0" w:type="dxa"/>
+                </w:tblCellMar>
+                <w:tblBorders>
+                    <w:top w:val="none"/>
+                    <w:left w:val="none"/>
+                    <w:bottom w:val="single" w:sz="6" w:space="1" w:color="999999"/>
+                    <w:right w:val="none"/>
+                    <w:insideH w:val="none"/>
+                    <w:insideV w:val="none"/>
+                </w:tblBorders>
+            </w:tblPr>
+            <w:tblGrid>
+                <w:gridCol w:w="6236"/>
+                <w:gridCol w:w="3402"/>
+            </w:tblGrid>
+            <w:tr>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:type="dxa" w:w="6236"/>
+                        <w:tcBorders>
+                            <w:bottom w:val="single" w:sz="6" w:space="1" w:color="999999"/>
+                        </w:tcBorders>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:spacing w:after="40" w:line="240" w:lineRule="auto"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:ascii="SimSun" w:hAnsi="SimSun" w:eastAsia="SimSun"/>
+                                <w:sz w:val="18"/>
+                                <w:szCs w:val="18"/>
+                            </w:rPr>
+                            <w:t>{title_text}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:type="dxa" w:w="3402"/>
+                        <w:tcBorders>
+                            <w:bottom w:val="single" w:sz="6" w:space="1" w:color="999999"/>
+                        </w:tcBorders>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:spacing w:after="40" w:line="240" w:lineRule="auto"/>
+                            <w:jc w:val="right"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:ascii="SimSun" w:hAnsi="SimSun" w:eastAsia="SimSun"/>
+                                <w:sz w:val="18"/>
+                                <w:szCs w:val="18"/>
+                            </w:rPr>
+                            <w:t xml:space="preserve">第 </w:t>
+                        </w:r>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:ascii="SimSun" w:hAnsi="SimSun" w:eastAsia="SimSun"/>
+                                <w:sz w:val="18"/>
+                                <w:szCs w:val="18"/>
+                            </w:rPr>
+                            <w:fldChar w:fldCharType="begin"/>
+                            <w:instrText xml:space="preserve">PAGE</w:instrText>
+                            <w:fldChar w:fldCharType="separate"/>
+                            <w:fldChar w:fldCharType="end"/>
+                        </w:r>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:ascii="SimSun" w:hAnsi="SimSun" w:eastAsia="SimSun"/>
+                                <w:sz w:val="18"/>
+                                <w:szCs w:val="18"/>
+                            </w:rPr>
+                            <w:t xml:space="preserve"> 页 共 </w:t>
+                        </w:r>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:ascii="SimSun" w:hAnsi="SimSun" w:eastAsia="SimSun"/>
+                                <w:sz w:val="18"/>
+                                <w:szCs w:val="18"/>
+                            </w:rPr>
+                            <w:fldChar w:fldCharType="begin"/>
+                            <w:instrText xml:space="preserve">NUMPAGES</w:instrText>
+                            <w:fldChar w:fldCharType="separate"/>
+                            <w:fldChar w:fldCharType="end"/>
+                        </w:r>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:ascii="SimSun" w:hAnsi="SimSun" w:eastAsia="SimSun"/>
+                                <w:sz w:val="18"/>
+                                <w:szCs w:val="18"/>
+                            </w:rPr>
+                            <w:t xml:space="preserve"> 页</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+            </w:tr>
+        </w:tbl>
     ''')
-    pPr_head.append(tabs_xml)
-
-    # 页眉下方细横线
-    pBdr_xml = parse_xml(r'''
-        <w:pBdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-            <w:bottom w:val="single" w:sz="6" w:space="1" w:color="999999"/>
-        </w:pBdr>
-    ''')
-    pPr_head.append(pBdr_xml)
-
-    # 左上角名称与版本号
-    hrun_left = header_p.add_run(f"{software_name} {software_version}")
-    set_run_font(hrun_left, "SimSun", 9.0, color_rgb=RGBColor(0, 0, 0))
-
-    # 制表符推至右上角
-    header_p.add_run("\t")
-
-    # 右上角自适应页码与总页码
-    frun1 = header_p.add_run("第 ")
-    set_run_font(frun1, "SimSun", 9.0, color_rgb=RGBColor(0, 0, 0))
-    add_field(header_p, "PAGE")
-    frun2 = header_p.add_run(" 页 共 ")
-    set_run_font(frun2, "SimSun", 9.0, color_rgb=RGBColor(0, 0, 0))
-    add_field(header_p, "NUMPAGES")
-    frun3 = header_p.add_run(" 页")
-    set_run_font(frun3, "SimSun", 9.0, color_rgb=RGBColor(0, 0, 0))
+    header._element.append(header_tbl_xml)
 
     # Title & Metadata block
     title_p = doc.add_paragraph(style='Title')
