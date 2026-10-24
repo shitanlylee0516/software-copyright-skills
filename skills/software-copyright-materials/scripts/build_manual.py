@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-build_manual.py
+build_manual.py (V1.0 最终版)
 
-Generates an editable Word (.docx) software manual template for Chinese software copyright applications.
+Generates an editable Word (.docx) complete software manual for Chinese software copyright applications.
 Parses Markdown, embeds real placeholder PNG slots for screenshots, applies Song/SimSun formatting,
-sets headers/footers with PAGE/NUMPAGES, and marks unverified metadata as "待确认".
+sets headers with 1x2 table strictly right-aligning dynamic PAGE/NUMPAGES fields, and marks unverified metadata as "待确认".
 """
 
 import argparse
@@ -437,7 +437,7 @@ def parse_and_append_markdown(doc, md_text: str):
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Build editable DOCX software manual template.")
+    parser = argparse.ArgumentParser(description="Build editable DOCX complete software manual (V1.0 Final Edition).")
     parser.add_argument("--input", required=True, help="Path to input Markdown file.")
     parser.add_argument("--metadata", required=True, help="Path to metadata JSON file.")
     parser.add_argument("--screenshots", required=True, help="Path to screenshots JSON file.")

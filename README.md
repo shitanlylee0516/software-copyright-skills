@@ -1,8 +1,9 @@
 # 软件著作权申报材料准备通用工具包 (software-copyright-skills)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version: V1.0-Final](https://img.shields.io/badge/Version-V1.0--Final-blue.svg)](https://github.com/shitanlylee0516/software-copyright-skills)
 
-本项目是一个开源、通用的中国计算机软件著作权登记材料准备与排版辅助工具（Skill）。旨在帮助开发者、科研人员和技术团队标准化整理申报材料草案、排查常见敏感文件、审计代码物理行数，并生成符合规范格式的 Word (`.docx`) 用户操作手册母版。
+本项目是一个开源、通用的中国计算机软件著作权登记材料准备与排版辅助工具（Skill），当前为 **V1.0 最终版**。旨在帮助开发者、科研人员和技术团队标准化整理申报材料草案、排查常见敏感文件、审计代码物理行数，并生成符合规范格式的完整版 Word (`.docx`) 用户操作说明书。
 
 开源主页：[https://github.com/shitanlylee0516/software-copyright-skills](https://github.com/shitanlylee0516/software-copyright-skills)
 
@@ -94,9 +95,9 @@ python skills/software-copyright-materials/scripts/collect_source.py \
 - `--manifest`：JSON 清单文件，必须仅包含唯一键 `files`，格式形如 `{"files": ["src/main.py", "src/util.py"]}`。严禁包含冒号（`:`）、绝对路径、路径遍历（`..`）或通配符。
 - `--out`：目标输出目录。为保护现场，如果该目录已存在，工具将拒绝覆盖并安全退出。
 
-### 二、用户操作手册 Word 母版生成 (`build_manual.py`)
+### 二、用户操作说明书 Word 完整版生成 (`build_manual.py`)
 
-基于 Markdown 文本与元数据配置，自动生成符合标准排版规范的 Word (`.docx`) 用户手册草案。
+基于 Markdown 文本与元数据配置，自动生成符合标准排版规范的完整版 Word (`.docx`) 软件说明书。
 
 ```bash
 python skills/software-copyright-materials/scripts/build_manual.py \
@@ -106,8 +107,8 @@ python skills/software-copyright-materials/scripts/build_manual.py \
   --output /path/to/manual.docx
 ```
 
-#### 推荐排版主工作流：
-1. **生成母版**：使用上述命令生成带有标准页边距、宋体版式、黑色页眉、动态页码（`PAGE` / `NUMPAGES`）及截图占位槽位的 `.docx` 文档。
+#### 推荐排版主工作流（完整版交付）：
+1. **生成完整版说明书**：使用上述命令生成带有标准页边距、宋体版式、黑色页眉（1x2 无框表格严格靠右对齐）、动态页码（`PAGE` / `NUMPAGES`）及截图占位槽位的完整版 `.docx` 文档。
 2. **替换截图**：在 Microsoft Word 或 WPS 中打开文档，右键单击附录中的占位图片，选择**「更改图片」**（Change Picture），替换为真实的软件全屏或主窗口运行截图。请保持截图原始宽高比，并逐图检查裁切与排版适配，避免直接删除占位图重新插入。
 3. **逐页检查与导出 PDF**：检查文字描述与界面一致性后，人工逐页核验，导出为高质量 PDF 文件供最终审查与打印。
 
