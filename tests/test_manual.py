@@ -25,8 +25,8 @@ class ManualTemplateTests(unittest.TestCase):
                 doc=z.read("word/document.xml").decode()
                 self.assertIn("首页选择界面",doc);self.assertIn("结果界面",doc)
                 self.assertIn("待确认",doc);self.assertNotIn("**粗体说明**",doc)
-                foot="".join(z.read(x).decode() for x in z.namelist() if x.startswith("word/footer") and x.endswith(".xml"))
-                self.assertIn("PAGE",foot);self.assertIn("NUMPAGES",foot)
+                head="".join(z.read(x).decode() for x in z.namelist() if x.startswith("word/header") and x.endswith(".xml"))
+                self.assertIn("PAGE",head);self.assertIn("NUMPAGES",head)
                 self.assertNotIn(str(p),doc)
                 root=ET.fromstring(doc);ns={"w":"http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
                 size=root.find(".//w:pgSz",ns)

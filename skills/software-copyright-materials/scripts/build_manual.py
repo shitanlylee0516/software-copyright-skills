@@ -528,34 +528,56 @@ def main() -> None:
     doc = Document()
     configure_document_styles(doc)
 
-    # Configure Section: A4, 2.2 cm margins (width=21.0, margins 2.2+2.2 leaves 16.6 cm text area)
+    # Configure Section: A4, 2.0 cm left/right, 2.5 cm top/bottom, 1.5 cm header/footer distance
     section = doc.sections[0]
     section.page_width = Cm(21.0)
     section.page_height = Cm(29.7)
-    section.top_margin = Cm(2.2)
-    section.bottom_margin = Cm(2.2)
-    section.left_margin = Cm(2.2)
-    section.right_margin = Cm(2.2)
+    section.top_margin = Cm(2.5)
+    section.bottom_margin = Cm(2.5)
+    section.left_margin = Cm(2.0)
+    section.right_margin = Cm(2.0)
+    section.header_distance = Cm(1.5)
+    section.footer_distance = Cm(1.5)
+    section.different_first_page_header_footer = True
 
-    # Header: real name / version, black 9pt
+    # Header: 左上角名称与版本号，右上角页码与总页码 (PAGE/NUMPAGES)，下方添加细横线
     header = section.header
     header_p = header.paragraphs[0]
-    header_p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-    hrun = header_p.add_run(f"{software_name} {software_version} 用户操作手册")
-    set_run_font(hrun, "SimSun", 9.0, color_rgb=RGBColor(0, 0, 0))
+    header_p.alignment = WD_ALIGN_PARAGRAPH.LEFT
 
-    # Footer: PAGE / NUMPAGES, gray 9pt
-    footer = section.footer
-    footer_p = footer.paragraphs[0]
-    footer_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    frun1 = footer_p.add_run("第 ")
-    set_run_font(frun1, "SimSun", 9.0, color_rgb=RGBColor(128, 128, 128))
-    add_field(footer_p, "PAGE")
-    frun2 = footer_p.add_run(" 页 / 共 ")
-    set_run_font(frun2, "SimSun", 9.0, color_rgb=RGBColor(128, 128, 128))
-    add_field(footer_p, "NUMPAGES")
-    frun3 = footer_p.add_run(" 页")
-    set_run_font(frun3, "SimSun", 9.0, color_rgb=RGBColor(128, 128, 128))
+    # 设置右对齐制表位：版芯宽 17.0 cm = 9638 dxa
+    pPr_head = header_p._element.get_or_add_pPr()
+    tabs_xml = parse_xml(r'''
+        <w:tabs xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+            <w:tab w:val="right" w:pos="9638"/>
+        </w:tabs>
+    ''')
+    pPr_head.append(tabs_xml)
+
+    # 页眉下方细横线
+    pBdr_xml = parse_xml(r'''
+        <w:pBdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+            <w:bottom w:val="single" w:sz="6" w:space="1" w:color="999999"/>
+        </w:pBdr>
+    ''')
+    pPr_head.append(pBdr_xml)
+
+    # 左上角名称与版本号
+    hrun_left = header_p.add_run(f"{software_name} {software_version}")
+    set_run_font(hrun_left, "SimSun", 9.0, color_rgb=RGBColor(0, 0, 0))
+
+    # 制表符推至右上角
+    header_p.add_run("\t")
+
+    # 右上角自适应页码与总页码
+    frun1 = header_p.add_run("第 ")
+    set_run_font(frun1, "SimSun", 9.0, color_rgb=RGBColor(0, 0, 0))
+    add_field(header_p, "PAGE")
+    frun2 = header_p.add_run(" 页 共 ")
+    set_run_font(frun2, "SimSun", 9.0, color_rgb=RGBColor(0, 0, 0))
+    add_field(header_p, "NUMPAGES")
+    frun3 = header_p.add_run(" 页")
+    set_run_font(frun3, "SimSun", 9.0, color_rgb=RGBColor(0, 0, 0))
 
     # Title & Metadata block
     title_p = doc.add_paragraph(style='Title')
