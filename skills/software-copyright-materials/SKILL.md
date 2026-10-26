@@ -47,6 +47,23 @@ python scripts/build_manual.py \
   --output /path/to/manual.docx
 ```
 
+### 3. 源代码规范文档 Word 排版生成 (`scripts/build_source_docx.py`)
+
+根据清洗与审计后的源代码纯文本，自动生成符合中国版权保护中心法定鉴存规范的 Word (`.docx`) 源代码材料文档。
+
+- 严格遵循 A4 规格、宋体 8.5 pt（小五号）、固定行距 12.0 pt、无手动物理分页的自然流淌排版标准。
+- 页眉配置 1x2 无框表格（左侧软件名称与版本号，右侧动态 PAGE/NUMPAGES 严格靠右对齐页码，底附 0.75 pt 细线）。
+- 具备法定节选机制：代码总行数大于 3500 行时，自动按前 1700 行 + `// [... 中间部分已省略 ...]` + 后 1700 行切分，精准生成 60 页材料；小于等于 3500 行时全量提交。
+
+使用示例（在 Skill 所在目录下运行或指定相对路径）：
+```bash
+python scripts/build_source_docx.py \
+  --input /path/to/cleaned_source.txt \
+  --output /path/to/source_code.docx \
+  --name "软件全称" \
+  --version "V1.0"
+```
+
 ## 依赖说明
 
 基础代码收集工具使用 Python 3.10+ 标准库，无需额外安装依赖；Word 操作手册生成工具依赖以下可选排版库，在独立安装本 Skill 时可直接安装：

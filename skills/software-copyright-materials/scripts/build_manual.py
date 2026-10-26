@@ -38,9 +38,37 @@ except ImportError:
     sys.stderr.write("Error: markdown-it-py is required. Install via `pip install -r requirements-optional.txt`\n")
     sys.exit(1)
 
+DEFAULT_PLACEHOLDER_PATH = Path(__file__).resolve().parents[1] / "resources" / "placeholder.png"
+
 
 def create_placeholder_png(width_px: int, height_px: int, slot_label: str) -> io.BytesIO:
-    """Creates a real in-memory grayscale PNG image for replacement in Word."""
+    """Loads and fits the official placeholder image (or generates a fallback PNG) for Word screenshot slots."""
+    if DEFAULT_PLACEHOLDER_PATH.exists():
+        try:
+            base_img = Image.open(DEFAULT_PLACEHOLDER_PATH)
+            bg_color = (235, 242, 255, 255) if base_img.mode == 'RGBA' else (235, 242, 255)
+            target_img = Image.new(base_img.mode, (width_px, height_px), bg_color)
+
+            scale = min(width_px / base_img.width, height_px / base_img.height)
+            new_w = max(1, int(base_img.width * scale))
+            new_h = max(1, int(base_img.height * scale))
+            resized_base = base_img.resize((new_w, new_h), Image.Resampling.LANCZOS)
+
+            offset_x = (width_px - new_w) // 2
+            offset_y = (height_px - new_h) // 2
+            if base_img.mode == 'RGBA':
+                target_img.paste(resized_base, (offset_x, offset_y), resized_base)
+            else:
+                target_img.paste(resized_base, (offset_x, offset_y))
+
+            bio = io.BytesIO()
+            target_img.save(bio, format="PNG")
+            bio.seek(0)
+            return bio
+        except Exception:
+            pass
+
+    # Fallback programmatic drawing if resource is missing
     img = Image.new("L", (width_px, height_px), color=240)
     draw = ImageDraw.Draw(img)
 

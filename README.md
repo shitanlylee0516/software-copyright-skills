@@ -35,7 +35,8 @@ software-copyright-skills/
 │       │   └── source-review.md                # 源码审查准则与物理行数审计
 │       ├── scripts/
 │       │   ├── collect_source.py               # 源码审查采集与清单清点工具
-│       │   └── build_manual.py                 # 操作手册 Word (.docx) 生成工具
+│       │   ├── build_manual.py                 # 操作手册 Word (.docx) 生成工具
+│       │   └── build_source_docx.py            # 源代码 Word (.docx) 规范生成工具
 │       └── examples/
 │           ├── application.example.json        # 申报元数据虚拟示例
 │           └── screenshots.example.json        # 截图占位槽位配置示例
@@ -111,6 +112,22 @@ python skills/software-copyright-materials/scripts/build_manual.py \
 1. **生成完整版说明书**：使用上述命令生成带有标准页边距、宋体版式、黑色页眉（1x2 无框表格严格靠右对齐）、动态页码（`PAGE` / `NUMPAGES`）及截图占位槽位的完整版 `.docx` 文档。
 2. **替换截图**：在 Microsoft Word 或 WPS 中打开文档，右键单击附录中的占位图片，选择**「更改图片」**（Change Picture），替换为真实的软件全屏或主窗口运行截图。请保持截图原始宽高比，并逐图检查裁切与排版适配，避免直接删除占位图重新插入。
 3. **逐页检查与导出 PDF**：检查文字描述与界面一致性后，人工逐页核验，导出为高质量 PDF 文件供最终审查与打印。
+
+### 三、源代码 Word 规范鉴存文档生成 (`build_source_docx.py`)
+
+基于自审净化后的源代码文本流，自动排版生成符合国家版权局 60 页（或不足 60 页全量提交）标准的 Word (`.docx`) 源代码文档。
+
+```bash
+python skills/software-copyright-materials/scripts/build_source_docx.py \
+  --input /path/to/cleaned_source.txt \
+  --output /path/to/source_code.docx \
+  --name "软件全称" \
+  --version "V1.0"
+```
+
+- **格式特征**：A4 标准、宋体 8.5 pt、固定行距 12.0 pt、无断裂自然流淌排版；
+- **页眉页码**：1x2 无框表格（左侧全称与版本，右侧动态 PAGE/NUMPAGES 严格靠右对齐页码，底附 0.75 pt 细线）；
+- **法定节选机制**：代码超过 3500 行自动执行前 1700 行 + `// [... 中间部分已省略 ...]` + 后 1700 行切分（生成整整 60 页）；不超过 3500 行全量连续编排。
 
 ---
 
